@@ -1,1 +1,1 @@
-{ "import": [{ "path" : "peter-jerry-ye/wasi-import/interface/wasi/io/poll", "alias" : "poll" }] }
+{ "import": [{ "path" : "peter-jerry-ye/wasi-imports/interface/wasi/io/poll", "alias" : "poll" }] }

@@ -1,1 +1,1 @@
-{ "import": [{ "path" : "peter-jerry-ye/wasi-import/interface/wasi/sockets/network", "alias" : "network" }] }
+{ "import": [{ "path" : "peter-jerry-ye/wasi-imports/interface/wasi/sockets/network", "alias" : "network" }] }

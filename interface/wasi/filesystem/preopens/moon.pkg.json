@@ -1,1 +1,1 @@
-{ "import": [{ "path" : "peter-jerry-ye/wasi-import/ffi", "alias" : "ffi" }, { "path" : "peter-jerry-ye/wasi-import/interface/wasi/filesystem/types", "alias" : "types" }] }
+{ "import": [{ "path" : "peter-jerry-ye/wasi-imports/ffi", "alias" : "ffi" }, { "path" : "peter-jerry-ye/wasi-imports/interface/wasi/filesystem/types", "alias" : "types" }] }

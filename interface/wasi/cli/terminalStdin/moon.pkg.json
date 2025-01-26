@@ -1,1 +1,1 @@
-{ "import": [{ "path" : "peter-jerry-ye/wasi-import/ffi", "alias" : "ffi" }, { "path" : "peter-jerry-ye/wasi-import/interface/wasi/cli/terminalInput", "alias" : "terminalInput" }] }
+{ "import": [{ "path" : "peter-jerry-ye/wasi-imports/ffi", "alias" : "ffi" }, { "path" : "peter-jerry-ye/wasi-imports/interface/wasi/cli/terminalInput", "alias" : "terminalInput" }] }

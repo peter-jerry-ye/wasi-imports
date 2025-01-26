@@ -1,1 +1,1 @@
-{ "import": [{ "path" : "peter-jerry-ye/wasi-import/ffi", "alias" : "ffi" }] }
+{ "import": [{ "path" : "peter-jerry-ye/wasi-imports/ffi", "alias" : "ffi" }] }

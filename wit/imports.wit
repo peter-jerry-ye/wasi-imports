@@ -1,4 +1,4 @@
-package peter-jerry-ye:wasi-import;
+package peter-jerry-ye:wasi-imports;
 
 world imports {
   include wasi:cli/imports@0.2.0;

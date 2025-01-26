@@ -1,1 +1,1 @@
-{ "import": [{ "path" : "peter-jerry-ye/wasi-import/ffi", "alias" : "ffi" }, { "path" : "peter-jerry-ye/wasi-import/interface/wasi/sockets/network", "alias" : "network" }, { "path" : "peter-jerry-ye/wasi-import/interface/wasi/sockets/tcp", "alias" : "tcp" }] }
+{ "import": [{ "path" : "peter-jerry-ye/wasi-imports/ffi", "alias" : "ffi" }, { "path" : "peter-jerry-ye/wasi-imports/interface/wasi/sockets/network", "alias" : "network" }, { "path" : "peter-jerry-ye/wasi-imports/interface/wasi/sockets/tcp", "alias" : "tcp" }] }
