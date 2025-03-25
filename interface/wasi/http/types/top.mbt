@@ -573,7 +573,7 @@ pub fn Fields::from_list(
   for index = 0; index < entries.length(); index = index + 1 {
     let element : (String, FixedArray[Byte]) = entries[index]
     let base = address + index * 16
-    @ffi.store32(base + 4, element.0.charcode_length())
+    @ffi.store32(base + 4, element.0.length())
     @ffi.store32(base + 0, @ffi.str2ptr(element.0))
     @ffi.store32(base + 12, element.1.length())
     @ffi.store32(base + 8, @ffi.bytes2ptr(element.1))
@@ -612,7 +612,7 @@ pub fn Fields::get(self : Fields, name : String) -> Array[FixedArray[Byte]] {
   wasmImportMethodFieldsGet(
     handle,
     @ffi.str2ptr(name),
-    name.charcode_length(),
+    name.length(),
     return_area,
   )
   let array : Array[FixedArray[Byte]] = []
@@ -634,7 +634,7 @@ pub fn Fields::has(self : Fields, name : String) -> Bool {
   let result : Int = wasmImportMethodFieldsHas(
     handle,
     @ffi.str2ptr(name),
-    name.charcode_length(),
+    name.length(),
   )
   ignore(name)
   return result != 0
@@ -664,7 +664,7 @@ pub fn Fields::set(
   wasmImportMethodFieldsSet(
     handle,
     @ffi.str2ptr(name),
-    name.charcode_length(),
+    name.length(),
     address,
     value.length(),
     return_area,
@@ -703,7 +703,7 @@ pub fn Fields::delete(
   wasmImportMethodFieldsDelete(
     handle,
     @ffi.str2ptr(name),
-    name.charcode_length(),
+    name.length(),
     return_area,
   )
   let lifted8 = match @ffi.load8_u(return_area + 0) {
@@ -738,7 +738,7 @@ pub fn Fields::append(
   wasmImportMethodFieldsAppend(
     handle,
     @ffi.str2ptr(name),
-    name.charcode_length(),
+    name.length(),
     @ffi.bytes2ptr(value),
     value.length(),
     return_area,
@@ -1006,7 +1006,7 @@ pub fn OutgoingRequest::set_method(
     Patch => (8, 0, 0)
     Other(payload26) => {
       ignoreList.push(payload26)
-      (9, @ffi.str2ptr(payload26), payload26.charcode_length())
+      (9, @ffi.str2ptr(payload26), payload26.length())
     }
   }
   let result : Int = wasmImportMethodOutgoingRequestSetMethod(
@@ -1057,7 +1057,7 @@ pub fn OutgoingRequest::set_path_with_query(
     None => (0, 0, 0)
     Some(payload2) => {
       ignoreList.push(payload2)
-      (1, @ffi.str2ptr(payload2), payload2.charcode_length())
+      (1, @ffi.str2ptr(payload2), payload2.length())
     }
   }
   let result : Int = wasmImportMethodOutgoingRequestSetPathWithQuery(
@@ -1120,7 +1120,7 @@ pub fn OutgoingRequest::set_scheme(
         Https => (1, 0, 0)
         Other(payload11) => {
           ignoreList.push(payload11)
-          (2, @ffi.str2ptr(payload11), payload11.charcode_length())
+          (2, @ffi.str2ptr(payload11), payload11.length())
         }
       }
       (1, lowered, lowered12, lowered13)
@@ -1176,7 +1176,7 @@ pub fn OutgoingRequest::set_authority(
     None => (0, 0, 0)
     Some(payload2) => {
       ignoreList.push(payload2)
-      (1, @ffi.str2ptr(payload2), payload2.charcode_length())
+      (1, @ffi.str2ptr(payload2), payload2.length())
     }
   }
   let result : Int = wasmImportMethodOutgoingRequestSetAuthority(
@@ -1368,7 +1368,7 @@ pub fn ResponseOutparam::set(
             None => (0, 0, 0)
             Some(payload15) => {
               ignoreList.push(payload15)
-              (1, @ffi.str2ptr(payload15), payload15.charcode_length())
+              (1, @ffi.str2ptr(payload15), payload15.length())
             }
           }
           let (lowered24, lowered25) = match payload9.info_code {
@@ -1407,7 +1407,7 @@ pub fn ResponseOutparam::set(
             None => (0, 0, 0)
             Some(payload78) => {
               ignoreList.push(payload78)
-              (1, @ffi.str2ptr(payload78), payload78.charcode_length())
+              (1, @ffi.str2ptr(payload78), payload78.length())
             }
           }
           (
@@ -1455,7 +1455,7 @@ pub fn ResponseOutparam::set(
                 None => (0, 0, 0)
                 Some(payload133) => {
                   ignoreList.push(payload133)
-                  (1, @ffi.str2ptr(payload133), payload133.charcode_length())
+                  (1, @ffi.str2ptr(payload133), payload133.length())
                 }
               }
               let (lowered143, lowered144) = match payload127.field_size {
@@ -1488,7 +1488,7 @@ pub fn ResponseOutparam::set(
             None => (0, 0, 0)
             Some(payload170) => {
               ignoreList.push(payload170)
-              (1, @ffi.str2ptr(payload170), payload170.charcode_length())
+              (1, @ffi.str2ptr(payload170), payload170.length())
             }
           }
           let (lowered180, lowered181) = match payload164.field_size {
@@ -1519,7 +1519,7 @@ pub fn ResponseOutparam::set(
             None => (0, 0, 0)
             Some(payload204) => {
               ignoreList.push(payload204)
-              (1, @ffi.str2ptr(payload204), payload204.charcode_length())
+              (1, @ffi.str2ptr(payload204), payload204.length())
             }
           }
           let (lowered214, lowered215) = match payload198.field_size {
@@ -1556,7 +1556,7 @@ pub fn ResponseOutparam::set(
             None => (0, 0, 0)
             Some(payload246) => {
               ignoreList.push(payload246)
-              (1, @ffi.str2ptr(payload246), payload246.charcode_length())
+              (1, @ffi.str2ptr(payload246), payload246.length())
             }
           }
           let (lowered256, lowered257) = match payload240.field_size {
@@ -1578,7 +1578,7 @@ pub fn ResponseOutparam::set(
             None => (0, 0, 0)
             Some(payload266) => {
               ignoreList.push(payload266)
-              (1, @ffi.str2ptr(payload266), payload266.charcode_length())
+              (1, @ffi.str2ptr(payload266), payload266.length())
             }
           }
           (31, lowered267, Int::to_int64(lowered268), lowered269, 0, 0, 0)
@@ -1588,7 +1588,7 @@ pub fn ResponseOutparam::set(
             None => (0, 0, 0)
             Some(payload278) => {
               ignoreList.push(payload278)
-              (1, @ffi.str2ptr(payload278), payload278.charcode_length())
+              (1, @ffi.str2ptr(payload278), payload278.length())
             }
           }
           (32, lowered279, Int::to_int64(lowered280), lowered281, 0, 0, 0)
@@ -1603,7 +1603,7 @@ pub fn ResponseOutparam::set(
             None => (0, 0, 0)
             Some(payload305) => {
               ignoreList.push(payload305)
-              (1, @ffi.str2ptr(payload305), payload305.charcode_length())
+              (1, @ffi.str2ptr(payload305), payload305.length())
             }
           }
           (38, lowered306, Int::to_int64(lowered307), lowered308, 0, 0, 0)

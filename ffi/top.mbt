@@ -72,18 +72,13 @@ pub extern "wasm" fn f32_to_i32(value : Float) -> Int =
 pub extern "wasm" fn f32_to_i64(value : Float) -> Int64 =
   #|(func (param f32) (result i64) local.get 0 f32.convert_i64_s)
 
+// set pseudo header; allocate extra bytes for string
 ///|
-extern "wasm" fn malloc_inline(size : Int) -> Int =
-  #|(func (param i32) (result i32) local.get 0 call $moonbit.malloc)
-
-///|
-pub fn malloc(size : Int) -> Int {
-  let words = size / 4 + 1
-  let address = malloc_inline(8 + words * 4)
-  store32(address, 1)
-  store32(address + 4, (words << 8) | 246)
-  address + 8
-}
+pub extern "wasm" fn malloc(size : Int) -> Int =
+  #|(func (param i32) (result i32) (local i32)
+  #| local.get 0 i32.const 4 i32.add call $moonbit.gc.malloc
+  #| local.tee 1 i32.const 0 call $moonbit.init_array8
+  #| local.get 1 i32.const 8 i32.add)
 
 ///|
 pub extern "wasm" fn free(position : Int) =
@@ -98,34 +93,22 @@ pub extern "wasm" fn str2ptr(str : String) -> Int =
   #|(func (param i32) (result i32) local.get 0 i32.const 8 i32.add)
 
 ///|
-extern "wasm" fn ptr2str_ffi(ptr : Int) -> String =
-  #|(func (param i32) (result i32) local.get 0 i32.const 8 i32.sub)
-
-///|
-pub fn ptr2str(ptr : Int, len : Int) -> String {
-  let words = len * 2 / 4 + 1
-  let address = ptr - 8
-  store32(address + 4, (words << 8) | 243)
-  store8(address + words * 4 + 7, 3 - len * 2 % 4)
-  ptr2str_ffi(ptr)
-}
+pub extern "wasm" fn ptr2str(ptr : Int, len : Int) -> String =
+  #|(func (param i32) (param i32) (result i32) (local i32)
+  #| local.get 0 i32.const 8 i32.sub local.tee 2
+  #| local.get 1 call $moonbit.init_array16
+  #| local.get 2)
 
 ///|
 pub extern "wasm" fn bytes2ptr(bytes : FixedArray[Byte]) -> Int =
   #|(func (param i32) (result i32) local.get 0 i32.const 8 i32.add)
 
 ///|
-extern "wasm" fn ptr2bytes_ffi(ptr : Int) -> FixedArray[Byte] =
-  #|(func (param i32) (result i32) local.get 0 i32.const 8 i32.sub)
-
-///|
-pub fn ptr2bytes(ptr : Int, len : Int) -> FixedArray[Byte] {
-  let words = len / 4 + 1
-  let address = ptr - 8
-  store32(address + 4, (words << 8) | 246)
-  store8(address + words * 4 + 7, 3 - len % 4)
-  ptr2bytes_ffi(ptr)
-}
+pub extern "wasm" fn ptr2bytes(ptr : Int, len : Int) -> FixedArray[Byte] =
+  #|(func (param i32) (param i32) (result i32) (local i32)
+  #| local.get 0 i32.const 8 i32.sub local.tee 2
+  #| local.get 1 call $moonbit.init_array8
+  #| local.get 2)
 
 ///|
 pub extern "wasm" fn uint_array2ptr(array : FixedArray[UInt]) -> Int =
@@ -152,69 +135,52 @@ pub extern "wasm" fn double_array2ptr(array : FixedArray[Double]) -> Int =
   #|(func (param i32) (result i32) local.get 0 i32.const 8 i32.add)
 
 ///|
-extern "wasm" fn ptr2uint_array_ffi(ptr : Int) -> FixedArray[UInt] =
-  #|(func (param i32) (result i32) local.get 0 i32.const 8 i32.sub)
+pub extern "wasm" fn ptr2uint_array(ptr : Int, len : Int) -> FixedArray[UInt] =
+  #|(func (param i32) (param i32) (result i32) (local i32)
+  #| local.get 0 i32.const 8 i32.sub local.tee 2
+  #| local.get 1 call $moonbit.init_array32
+  #| local.get 2)
 
 ///|
-pub fn ptr2uint_array(ptr : Int, len : Int) -> FixedArray[UInt] {
-  set_header_ffi(ptr - 4, len)
-  ptr2uint_array_ffi(ptr)
-}
+pub extern "wasm" fn ptr2int_array(ptr : Int, len : Int) -> FixedArray[Int] =
+  #|(func (param i32) (param i32) (result i32) (local i32)
+  #| local.get 0 i32.const 8 i32.sub local.tee 2
+  #| local.get 1 call $moonbit.init_array32
+  #| local.get 2)
 
 ///|
-extern "wasm" fn ptr2int_array_ffi(ptr : Int) -> FixedArray[Int] =
-  #|(func (param i32) (result i32) local.get 0 i32.const 8 i32.sub)
+pub extern "wasm" fn ptr2float_array(ptr : Int, len : Int) -> FixedArray[Float] =
+  #|(func (param i32) (param i32) (result i32) (local i32)
+  #| local.get 0 i32.const 8 i32.sub local.tee 2
+  #| local.get 1 call $moonbit.init_array32
+  #| local.get 2)
 
 ///|
-pub fn ptr2int_array(ptr : Int, len : Int) -> FixedArray[Int] {
-  set_header_ffi(ptr - 4, len)
-  ptr2int_array_ffi(ptr)
-}
+pub extern "wasm" fn ptr2uint64_array(
+  ptr : Int,
+  len : Int
+) -> FixedArray[UInt64] =
+  #|(func (param i32) (param i32) (result i32) (local i32)
+  #| local.get 0 i32.const 8 i32.sub local.tee 2
+  #| local.get 1 call $moonbit.init_array64
+  #| local.get 2)
 
 ///|
-extern "wasm" fn ptr2float_array_ffi(ptr : Int) -> FixedArray[Float] =
-  #|(func (param i32) (result i32) local.get 0 i32.const 8 i32.sub)
+pub extern "wasm" fn ptr2int64_array(ptr : Int, len : Int) -> FixedArray[Int64] =
+  #|(func (param i32) (param i32) (result i32) (local i32)
+  #| local.get 0 i32.const 8 i32.sub local.tee 2
+  #| local.get 1 call $moonbit.init_array64
+  #| local.get 2)
 
 ///|
-pub fn ptr2float_array(ptr : Int, len : Int) -> FixedArray[Float] {
-  set_header_ffi(ptr - 4, len)
-  ptr2float_array_ffi(ptr)
-}
-
-///|
-extern "wasm" fn ptr2uint64_array_ffi(ptr : Int) -> FixedArray[UInt64] =
-  #|(func (param i32) (result i32) local.get 0 i32.const 8 i32.sub)
-
-///|
-pub fn ptr2uint64_array(ptr : Int, len : Int) -> FixedArray[UInt64] {
-  set_header_ffi(ptr - 4, len)
-  ptr2uint64_array_ffi(ptr)
-}
-
-///|
-extern "wasm" fn ptr2int64_array_ffi(ptr : Int) -> FixedArray[Int64] =
-  #|(func (param i32) (result i32) local.get 0 i32.const 8 i32.sub)
-
-///|
-pub fn ptr2int64_array(ptr : Int, len : Int) -> FixedArray[Int64] {
-  set_header_ffi(ptr - 4, len)
-  ptr2int64_array_ffi(ptr)
-}
-
-///|
-extern "wasm" fn ptr2double_array_ffi(ptr : Int) -> FixedArray[Double] =
-  #|(func (param i32) (result i32) local.get 0 i32.const 8 i32.sub)
-
-///|
-pub fn ptr2double_array(ptr : Int, len : Int) -> FixedArray[Double] {
-  set_header_ffi(ptr - 4, len)
-  ptr2double_array_ffi(ptr)
-}
-
-///|
-fn set_header_ffi(offset : Int, len : Int) -> Unit {
-  store32(offset, (len << 8) | 241)
-}
+pub extern "wasm" fn ptr2double_array(
+  ptr : Int,
+  len : Int
+) -> FixedArray[Double] =
+  #|(func (param i32) (param i32) (result i32) (local i32)
+  #| local.get 0 i32.const 8 i32.sub local.tee 2
+  #| local.get 1 call $moonbit.init_array64
+  #| local.get 2)
 
 ///|
 pub fn cabi_realloc(

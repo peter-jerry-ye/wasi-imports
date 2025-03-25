@@ -38,7 +38,7 @@ pub fn resolve_addresses(
   wasmImportResolveAddresses(
     handle,
     @ffi.str2ptr(name),
-    name.charcode_length(),
+    name.length(),
     return_area,
   )
   let lifted = match @ffi.load8_u(return_area + 0) {
